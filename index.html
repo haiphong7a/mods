@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Mod Installer - Fabric 1.21.5</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">
+                <i class="fas fa-cube"></i>
+            </div>
+            <h1>Minecraft Mod Installer</h1>
+            <p>Cài đặt các mod Fabric 1.21.5 một cách dễ dàng</p>
+            <div class="version-badge">
+                <i class="fas fa-tag"></i>
+                Minecraft 1.21.5 - Fabric
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Danh sách mod -->
+            <div class="card mod-selection-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-download"></i> Chọn Mod để cài đặt</h2>
+                    <p>Chọn các mod bạn muốn cài đặt vào Minecraft Fabric 1.21.5</p>
+                    <div class="selection-controls">
+                        <button id="select-all-btn" class="btn-small">
+                            <i class="fas fa-check-double"></i> Chọn tất cả
+                        </button>
+                        <button id="clear-all-btn" class="btn-small">
+                            <i class="fas fa-times"></i> Bỏ chọn tất cả
+                        </button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="mod-stats">
+                        <span id="selected-count">0</span> mod được chọn
+                    </div>
+                    <div id="mod-list" class="mod-list">
+                        <!-- Mod items sẽ được tạo bằng JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel cài đặt -->
+            <div class="card install-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-cog"></i> Cài đặt & Thiết lập</h2>
+                    <p>Cài đặt các mod đã chọn vào thư mục Minecraft</p>
+                </div>
+                <div class="card-content">
+                    <div class="install-info">
+                        <div class="info-item">
+                            <i class="fas fa-folder"></i>
+                            <div>
+                                <strong>Thư mục cài đặt:</strong>
+                                <code>C:\Users\Admin\AppData\Roaming\.minecraft\mods</code>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <strong>Phiên bản:</strong>
+                                <span class="version-text">Minecraft 1.21.5 + Fabric Loader</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button id="open-folder-btn" class="btn btn-outline">
+                            <i class="fas fa-folder-open"></i>
+                            Mở thư mục Minecraft
+                        </button>
+
+                        <button id="backup-btn" class="btn btn-outline">
+                            <i class="fas fa-shield-alt"></i>
+                            Sao lưu mod hiện tại
+                        </button>
+                    </div>
+
+                    <div id="progress-container" class="progress-container" style="display: none;">
+                        <div class="progress-header">
+                            <span id="current-mod">Đang chuẩn bị...</span>
+                            <span id="progress-percentage">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                        <div class="progress-details">
+                            <span id="progress-current">0</span> / <span id="progress-total">0</span> mod
+                        </div>
+                    </div>
+
+                    <button id="install-btn" class="btn btn-primary btn-large" disabled>
+                        <i class="fas fa-download"></i>
+                        <span id="install-text">Chọn mod để cài đặt</span>
+                    </button>
+
+                    <div id="status-alert" class="alert" style="display: none;">
+                        <i id="status-icon" class="fas fa-info-circle"></i>
+                        <div class="alert-content">
+                            <div id="status-title" class="alert-title"></div>
+                            <div id="status-message" class="alert-message"></div>
+                        </div>
+                    </div>
+
+                    <div class="requirements">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Yêu cầu hệ thống</h3>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Minecraft Java Edition 1.21.5</li>
+                            <li><i class="fas fa-check"></i> Fabric Loader đã được cài đặt</li>
+                            <li><i class="fas fa-check"></i> Trình duyệt Chrome/Edge (phiên bản mới)</li>
+                            <li><i class="fas fa-check"></i> Đóng Minecraft trước khi cài đặt</li>
+                        </ul>
+                    </div>
+
+                    <div class="help-section">
+                        <details>
+                            <summary><i class="fas fa-question-circle"></i> Hướng dẫn cài đặt</summary>
+                            <div class="help-content">
+                                <ol>
+                                    <li>Đảm bảo đã cài đặt Fabric Loader cho Minecraft 1.21.5</li>
+                                    <li>Đóng hoàn toàn Minecraft Launcher và game</li>
+                                    <li>Chọn các mod bạn muốn cài đặt từ danh sách</li>
+                                    <li>Nhấn "Cài đặt mod" và chọn thư mục mods</li>
+                                    <li>Chờ quá trình tải xuống hoàn tất</li>
+                                    <li>Khởi động Minecraft và kiểm tra mod đã được tải</li>
+                                </ol>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <p><i class="fas fa-heart"></i> Tạo bởi Minecraft Mod Installer</p>
+                <p>Tất cả mod thuộc về tác giả gốc. Vui lòng ủng hộ các nhà phát triển mod.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
