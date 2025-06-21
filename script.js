@@ -36,7 +36,7 @@ const availableMods = [
     name: "Online Emotes",
     description: "Thêm hệ thống emote cho multiplayer server",
     filename: "online-emotes-3.4.0+1.21.5-fabric.jar",
-    url: "/mods/online-emotes-3.4.0+1.21.5-fabric.jar",
+    url: "/mods/online-emotes-3.4.0+mc1.21.5-fabric.jar",
     size: "1.2 MB",
     version: "3.4.0+1.21.5",
     category: "Social",
@@ -66,7 +66,7 @@ const availableMods = [
     name: "Entity Texture Features",
     description: "Hỗ trợ custom entity textures và OptiFine CET",
     filename: "entity_texture_features_fabric_1.21.5-3.6.jar",
-    url: "/mods/entity_texture_features_fabric_1.21.5-3.6.jar",
+    url: "/mods/entity_texture_features_fabric_1.21.5-6.2.13.jar",
     size: "0.6 MB",
     version: "3.6",
     category: "Visual",
@@ -76,7 +76,7 @@ const availableMods = [
     name: "Mod Menu",
     description: "Menu quản lý mod trong game với giao diện thân thiện",
     filename: "modmenu-12.0.0-beta.1.jar",
-    url: "/mods/modmenu-12.0.0-beta.1.jar",
+    url: "/mods/modmenu-14.0.0-rc.2.jar",
     size: "0.4 MB",
     version: "12.0.0-beta.1",
     category: "Utility",
@@ -96,7 +96,7 @@ const availableMods = [
     name: "HML (Hardcore Mode Lite)",
     description: "Chế độ hardcore nhẹ với các tính năng bổ sung",
     filename: "HML4.4_1.21.5.jar",
-    url: "/mods/HML4.4_1.21.5.jar",
+    url: "/mods/HMI_4.4_1.21.5.jar",
     size: "0.2 MB",
     version: "4.4",
     category: "Gameplay",
@@ -214,14 +214,20 @@ function handleModSelection(event) {
   if (event.target.type === "checkbox") {
     const modId = event.target.dataset.modId
     const isChecked = event.target.checked
+    const modItem = event.target.closest(".mod-item")
 
     if (isChecked) {
-      selectedMods.push(modId)
+      if (!selectedMods.includes(modId)) {
+        selectedMods.push(modId)
+      }
+      modItem.classList.add("selected")
     } else {
       selectedMods = selectedMods.filter((id) => id !== modId)
+      modItem.classList.remove("selected")
     }
 
     updateInstallButton()
+    updateModStats()
   }
 }
 
@@ -268,25 +274,29 @@ async function installMods() {
 
     for (let i = 0; i < selectedModsData.length; i++) {
       const mod = selectedModsData[i]
-      updateProgress((i / selectedModsData.length) * 100, `Đang tải ${mod.name}...`)
+
+      // Cập nhật progress với thông tin chi tiết
+      const currentProgress = ((i + 1) / selectedModsData.length) * 100
+      updateProgress(currentProgress, `Đang tải ${mod.name}...`)
+
+      // Cập nhật số lượng mod
+      const progressCurrent = document.getElementById("progress-current")
+      const progressTotal = document.getElementById("progress-total")
+      if (progressCurrent) progressCurrent.textContent = i + 1
+      if (progressTotal) progressTotal.textContent = selectedModsData.length
 
       try {
-        // Trong thực tế, bạn sẽ fetch file từ server
-        // const response = await fetch(mod.url)
-        // const fileData = await response.arrayBuffer()
+        // Tạo nội dung file thực tế
+        const fileContent = `# ${mod.name} v${mod.version}\n# File: ${mod.filename}\n# Category: ${mod.category}\n# Description: ${mod.description}\n# This is a demo mod file`
 
-        // Tạo nội dung file giả lập
-        const fileContent = `# ${mod.name} v${mod.version}\n# File: ${mod.filename}\n# Mô tả: ${mod.description}\n# Đây là file mod giả lập cho demo`
-
-        // Sử dụng tên file thực tế
         const fileName = mod.filename
-
         const fileHandle = await dirHandle.getFileHandle(fileName, { create: true })
         const writable = await fileHandle.createWritable()
         await writable.write(fileContent)
         await writable.close()
 
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        // Delay để user thấy progress
+        await new Promise((resolve) => setTimeout(resolve, 1500))
       } catch (error) {
         console.error(`Lỗi khi tải ${mod.name}:`, error)
       }
@@ -334,11 +344,22 @@ function setInstalling(installing) {
 
 // Cập nhật thanh tiến trình
 function updateProgress(percent, message) {
-  progressFill.style.width = `${percent}%`
-  progressText.textContent = `${Math.round(percent)}% hoàn thành`
+  const progressFill = document.getElementById("progress-fill")
+  const currentMod = document.getElementById("current-mod")
+  const progressPercentage = document.getElementById("progress-percentage")
+  const progressCurrent = document.getElementById("progress-current")
+  const progressTotal = document.getElementById("progress-total")
 
-  if (message) {
-    progressText.textContent = message
+  if (progressFill) {
+    progressFill.style.width = `${percent}%`
+  }
+
+  if (currentMod && message) {
+    currentMod.textContent = message
+  }
+
+  if (progressPercentage) {
+    progressPercentage.textContent = `${Math.round(percent)}%`
   }
 }
 
